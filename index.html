@@ -21,7 +21,25 @@
         <div class="form-group">
             <div class="col-sm-2">
                 <label for="percentv">% Vainglorious</label>
-                <input type="number" class="form-control" id="percentv" name="numv" placeholder="10">
+                <input type="number" class="form-control" id="percentv" placeholder="10" min="0" max="100">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2">
+                <label for="vallife">Value of Life</label>
+                <input type="text" class="form-control" id="vallife" placeholder=".7">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2">
+                <label for="valglory">Value of Glory</label>
+                <input type="text" class="form-control" id="valglory" placeholder=".7">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2">
+                <label for="valpeace">Value of Peace</label>
+                <input type="text" class="form-control" id="valpeace" placeholder=".7">
             </div>
         </div>
         <br><br><br><br>
@@ -44,10 +62,12 @@
 
     <div id="result"></div>
 
+    <br>
+
     <div id="chart_div"></div>
 </div>
 <script>
-    var q = 0.1; //The % vainglorious
+    var q = 40; //The % vainglorious
     var beta = 0.7; //The % chance for a modest attack
     var p = .7; //The value of peace
     var g = .8; //The value of war
@@ -57,9 +77,21 @@
     var ptotal = 0;
     var lvtotal = 0;
     var lmtotal = 0;
-    console.log(q);
+
     function submitForm() {
-        q = document.forms["input"].elements["percentv"].value;
+
+        if(document.forms["input"].elements["percentv"].value){
+            q=document.forms["input"].elements["percentv"].value;
+        }
+        if(document.forms["input"].elements["vallife"].value) {
+            l = parseFloat(document.forms["input"].elements["vallife"].value);
+        }
+        if(document.forms["input"].elements["valglory"].value) {
+            g = parseFloat(document.forms["input"].elements["valglory"].value);
+        }
+        if(document.forms["input"].elements["valpeace"].value) {
+            p = parseFloat(document.forms["input"].elements["valpeace"].value);
+        }
         meeting();
     }
 
@@ -78,7 +110,6 @@
         document.getElementById("p1").innerHTML = "Person 1 is " + obj1.type_full + " (" + obj1.type + ")";
         document.getElementById("p2").innerHTML = "Person 2 is " + obj2.type_full + " (" + obj2.type + ")";
         if (obj1.type == "v" && obj2.type == "v") {
-            console.log("Check for VV");
             var win = 1;
             if (Math.random() > 0.5) {
                 win = 2;
@@ -115,18 +146,18 @@
         var data = new google.visualization.arrayToDataTable([
             ["Type","Glory","Peace","Life"],
             ["Vain",gtotal, 0, lvtotal],
-            ["Modest",0, ptotal, lmtotal]
+            ["Modest",0, ptotal, lmtotal],
         ]);
 
         var options = {
             title: 'Tracking Encounter Payoff Over Time',
             isStacked: true,
             hAxis: {
-                title: 'Type of Person',
+                title: 'Type of Person'
             },
             vAxis: {
                 title: 'Value',
-                minValue: 0,
+                minValue: 0
             }
         };
 
